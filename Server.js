@@ -27,7 +27,7 @@ class Server {
 	}
 
 	add(path, callback) {
-		logger.log("add " + path)
+		logger.log("Add " + path)
 		if (!this.pathFunc[path])
 			this.pathFunc[path] = callback;
 	}
