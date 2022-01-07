@@ -12,6 +12,19 @@ server.add("/gps", (req, res) => {
 	res.end(JSON.stringify({data: 'Hello GPS!'}));
 })
 
+server.add("/gps/map", (req, res) => {
+
+	
+	fs.readFile('./gps/index.html', function (err, html) {
+		if (err)
+			throw err;
+		res.writeHeader(200, {"Content-Type": "text/html",'Content-Length': html.length});
+		res.write(html);
+		res.end();
+	});
+
+})
+
 class Pos {
 	constructor(latitude, longitude) {
 		this.date = Date.now();
@@ -36,7 +49,7 @@ function getDistanceFromLatLonInKm(pos1, pos2) {
 	; 
 	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
 	var d = R * c; // km
-	return d;
+	return d + 0.0;
 }
 
 function deg2rad(deg) {
@@ -59,10 +72,12 @@ server.add("/gps/post", async (req, res, url) => {
 	let newpos = new Pos(body.latitude, body.longitude);
 	let rawdata = fs.readFileSync('gps/pos.json');
 	let data = JSON.parse(rawdata);
-	console.log(getDistanceFromLatLonInKm(new Pos(data[data.lenght - 1].latitude, data[data.lenght - 1].longitude), newpos));
-	// if (getDistanceFromLatLonInKm(data[data.lenght - 1], newpos) > 1)
-		// data.push(new Pos(body.latitude, body.longitude));
+	console.log(newpos);
+	let lastpos = new Pos(data[Object.keys(data).length - 1].latitude, data[Object.keys(data).length - 1].longitude)
+	console.log(getDistanceFromLatLonInKm(lastpos, newpos));
+	if (getDistanceFromLatLonInKm(lastpos, newpos) > 0.01)
+		data.push(newpos);
 	fs.writeFileSync("gps/pos.json", JSON.stringify(data, undefined, 2));
 	res.writeHead(200, { 'Content-Type': 'application/json' });
 	res.end(JSON.stringify({status: 200, data: 'Hello Android!'}));
-});
+})
