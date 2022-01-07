@@ -3,27 +3,6 @@ const fs = require('fs');
 const Logger = require("./Logger.js");
 const Server = require("./Server.js");
 
-const logger = new Logger();
-var server = new Server(8080)
-
-server.add("/favicon.ico", () => {return; });
-server.add("/gps", (req, res) => {
-	res.writeHead(200, { 'Content-Type': 'application/json' });
-	res.end(JSON.stringify({data: 'Hello GPS!'}));
-})
-
-server.add("/gps/map", (req, res) => {
-
-	
-	fs.readFile('./gps/index.html', function (err, html) {
-		if (err)
-			throw err;
-		res.writeHeader(200, {"Content-Type": "text/html",'Content-Length': html.length});
-		res.write(html);
-		res.end();
-	});
-
-})
 
 class Pos {
 	constructor(latitude, longitude) {
@@ -55,6 +34,49 @@ function getDistanceFromLatLonInKm(pos1, pos2) {
 function deg2rad(deg) {
 	return deg * (Math.PI/180)
 }
+
+
+const logger = new Logger();
+var server = new Server(8080)
+
+
+
+server.add("/favicon.ico", () => {return; });
+server.add("/gps", (req, res) => {
+	res.writeHead(200, { 'Content-Type': 'application/json' });
+	res.end(JSON.stringify({data: 'Hello GPS!'}));
+})
+
+server.add("/gps/map", (req, res) => {
+
+	fs.readFile('./gps/index.html', function (err, html) {
+		if (err)
+			throw err;
+		res.writeHeader(200, {"Content-Type": "text/html",'Content-Length': html.length});
+		res.write(html);
+		res.end();
+	});
+})
+
+server.add("/gps/pos.json", (req, res) => {
+	fs.readFile('./gps/pos.json', function (err, data) {
+		if (err)
+			throw err;
+		res.writeHeader(200, {'Content-Type': 'application/json', 'Content-Length': data.length});
+		res.end(data);
+	});
+})
+
+server.add("/gps/main.js", (req, res) => {
+	fs.readFile('./gps/main.js', function (err, data) {
+		if (err)
+			throw err;
+		res.writeHeader(200, {'Content-Type': 'text/javascript', 'Content-Length': data.length});
+		res.end(data);
+	});
+
+})
+
 
 server.add("/gps/post", async (req, res, url) => {
 	if (!req.method.includes("POST")) {

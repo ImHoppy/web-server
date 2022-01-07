@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Add a line to a map using a GeoJSON source</title>
+    <title>Map</title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.1/mapbox-gl.js"></script>
@@ -12,7 +12,17 @@
             margin: 0;
             padding: 0;
         }
-
+		#stats {
+			font: italic 1.2em "Fira Sans", serif;
+            font-size: 20px;
+			outline: 1px  dashed #4a5355;
+			
+            color: #4a5355;
+            position: absolute;
+            top: 30px;
+            left: 40px;
+			background-color: rgba(255, 255, 128, .5);
+		}
         #map {
             position: absolute;
             top: 0;
@@ -20,85 +30,24 @@
             width: 100%;
         }
         #km  {
-            position: absolute;
-            color: red;
-            font-size: 20px;
-            top: 50px;
-            left: 50px;
+            top: 35px;
+            left: 0px;
+        }
+        #position  {
+            top: 0px;
+            left: 0px;
         }
     </style>
 </head>
 
 <body>
     <div id="map"></div>
-    <div id="km">0000000000KM</div>
-    <script>
-        // TO MAKE THE MAP APPEAR YOU MUST
-        // ADD YOUR ACCESS TOKEN FROM
-        // https://account.mapbox.com
-        mapboxgl.accessToken = 'pk.eyJ1IjoiaW1ob3BweSIsImEiOiJja3k0OXB4bHEwOXgzMm9vMzkwbjhzaGtoIn0.Frx5osoLqe-Q1dD0PKEwbA';
-        const map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/streets-v11',
-            center: [2.24983763, 48.71646084],//[-122.486052, 37.830348],
-            zoom: 15
-        });
-
-        map.on('load', () => {
-            map.addSource('route', {
-                'type': 'geojson',
-                'data': {
-                    'type': 'Feature',
-                    'properties': {},
-                    'geometry': {
-                        'type': 'LineString',
-                        'coordinates': [
-
-
-[2.24983763, 48.71646084],
-[2.24979739, 48.71634243],
-[2.24986396, 48.7164319],
-[2.24993694, 48.71654315]
-                            // [-122.483696, 37.934818],
-                            // [-122.483482, 37.833174],
-                            // [-122.483396, 37.8327],
-                            // [-122.483568, 37.832056],
-                            // [-122.48404, 37.831141],
-                            // [-122.48404, 37.830497],
-                            // [-122.483482, 37.82992],
-                            // [-122.483568, 37.829548],
-                            // [-122.48507, 37.829446],
-                            // [-122.4861, 37.828802],
-                            // [-122.486958, 37.82931],
-                            // [-122.487001, 37.830802],
-                            // [-122.487516, 37.831683],
-                            // [-122.488031, 37.832158],
-                            // [-122.488889, 37.832971],
-                            // [-122.489876, 37.832632],
-                            // [-122.490434, 37.832937],
-                            // [-122.49125, 37.832429],
-                            // [-122.491636, 37.832564],
-                            // [-122.492237, 37.833378],
-                            // [-122.493782, 37.833683]
-                        ]
-                    }
-                }
-            });
-            map.addLayer({
-                'id': 'route',
-                'type': 'line',
-                'source': 'route',
-                'layout': {
-                    'line-join': 'round',
-                    'line-cap': 'round'
-                },
-                'paint': {
-                    'line-color': '#7bf600',
-                    'line-width': 8
-                }
-            });
-        });
-    </script>
+	<div id="stats">
+		<div id="position">undefined</div>
+		<div id="km">0.0KM</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="main.js" async></script>
 
 </body>
 
